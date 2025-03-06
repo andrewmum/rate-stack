@@ -1,0 +1,35 @@
+# .NET Core
+*.swp
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+*.dll.config
+*.cache
+*.xsd.cs
+bin/
+obj/
+.vs/
+.vscode/
+_ReSharper*/
+*.ReSharper*
+*.DotSettings.user
+.idea/
+
+# Next.js
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
