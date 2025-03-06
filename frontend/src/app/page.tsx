@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     if (user) {
-      router.push("/dashboard");
+      router.push("/home");
     }
   }, [user, router]);
   return (

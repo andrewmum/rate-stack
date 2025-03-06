@@ -6,7 +6,7 @@ namespace rate_it_api.Api.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    
+
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -24,6 +24,13 @@ namespace rate_it_api.Api.Controllers
             return Ok(user);
         }
 
+        [HttpPost("Verify")]
+        public async Task<IActionResult> VerifyFirebaseToken([FromBody] VerifyTokenDto request)
+        {
+            var result = await _userService.VerifyUserAsync(request);
+            if (result == null) return NotFound(result);
+            return Ok(result);
+        }
     }
 
-}
+} 

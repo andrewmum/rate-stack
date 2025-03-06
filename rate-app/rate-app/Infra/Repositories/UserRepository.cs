@@ -23,10 +23,9 @@ namespace rate_it_api.Infra.Repositories
             await _context.SaveChangesAsync();
             return user;
         }
-
-        public async Task<User?> GetUserByUsernameAsync(string username)
+        public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+            return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
         }
     }
 }

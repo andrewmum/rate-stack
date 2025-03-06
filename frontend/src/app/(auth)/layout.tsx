@@ -3,13 +3,25 @@
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { LogOutIcon } from "lucide-react";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -27,8 +39,43 @@ export default function AuthLayout({
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header Placeholder*/}
+    <div className="">
+      <NavigationMenu className="w-full text-center">
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link href="/home" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Home
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/review" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Review Something
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/groups" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Groups
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem
+            className={navigationMenuTriggerStyle() + `float-right`}
+          >
+            Welcome {user.displayName}
+          </NavigationMenuItem>
+          <NavigationMenuItem className="">
+            <Button onClick={() => logout()} variant="destructive" size="sm">
+              Logout
+            </Button>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
       <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
     </div>
   );

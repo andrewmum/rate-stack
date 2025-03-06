@@ -73,7 +73,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
-      await api.post("auth/verify-firebase-token", { token });
+      await api.post("users/verify", { token });
       return result;
     } catch (error) {
       console.error("Error signing in with Google", error);
