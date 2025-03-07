@@ -3,7 +3,8 @@
     public class Item
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public string ExternalID { get; set; }
+        public string? Name { get; set; } = string.Empty;
         public Category Category { get; set; } = Category.Custom; 
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -16,6 +17,7 @@
         Resturaunt,
         Experience,
         Recipe,
-        Custom
+        Custom,
+        Book,
     }
 }

@@ -1,4 +1,5 @@
-﻿using rate_it_api.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using rate_it_api.Core.Entities;
 
 namespace rate_it_api.Infra.Repositories
 {
@@ -20,6 +21,15 @@ namespace rate_it_api.Infra.Repositories
             await _context.Ratings.AddAsync(rating);
             await _context.SaveChangesAsync();
             return rating;
+        }
+
+        public async Task<IEnumerable<Rating>> GetUserRatingsWithItemsAsync(string userId)
+        {
+            return await _context.Ratings
+                .Where(r => r.UserId == userId)
+                .Include(r => r.Item)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
         }
     }
 }

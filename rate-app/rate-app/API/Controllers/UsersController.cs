@@ -29,7 +29,7 @@ namespace rate_it_api.Api.Controllers
         {
             var result = await _userService.VerifyUserAsync(request);
             if (result == null) return NotFound(result);
-            return Ok(result);
+            return Ok(new {success = true, authToken = result});
         }
     }
 

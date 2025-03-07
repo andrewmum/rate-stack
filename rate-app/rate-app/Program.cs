@@ -3,13 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using rate_it_api.Core.Services;
 using rate_it_api.Infra.Repositories;
 using Google.Apis.Auth.OAuth2;
-using System.IO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using rate_app.Core.Entities;
+using Newtonsoft.Json;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=rateit.db"));
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -17,6 +25,8 @@ builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IExternalItemService, ExternalItemService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -24,10 +34,28 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod()
                           .AllowAnyHeader());
 });
+builder.Services.AddHttpContextAccessor();
 
-// And in the middleware pipeline:
-// add swagger services
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+            ValidAudience = builder.Configuration["JWT:ValidAudience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        };
+    });
+
+
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -47,9 +75,9 @@ if(FirebaseApp.DefaultInstance == null)
     });
 }
 var app = builder.Build();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseCors("AllowAll");
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -97,8 +97,12 @@ const api = {
     endpoint: string,
     options: RequestOptions = {}
   ): Promise<T> {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("apiToken") : null;
+
     const headers = {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     };
 

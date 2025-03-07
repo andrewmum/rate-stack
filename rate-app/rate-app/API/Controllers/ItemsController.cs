@@ -28,12 +28,13 @@ namespace rate_it_api.Api.Controllers
             var items = await _itemService.SearchItemsAsync(category);
             return Ok(items);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateItem([FromBody] ItemDto itemDto)
+        [HttpGet]
+        [Route("allitems")]
+        public async Task<IActionResult> GetAllItems()
         {
-            var item = await _itemService.CreateItemAsync(itemDto.Name, 0, itemDto.Description);
-            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+            var items = await _itemService.GetAllItemsAsync();
+            return Ok(items);
         }
+
     }
 }

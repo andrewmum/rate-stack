@@ -6,6 +6,7 @@ namespace rate_it_api.Infra.Repositories
     {
         Task<Rating> GetRatingsForItemAsync(int itemId);
         Task<Rating> SubmitRatingAsync(Rating rating);
+        Task<IEnumerable<Rating>> GetUserRatingsWithItemsAsync(string userId);
 
     }
 }

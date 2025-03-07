@@ -39,43 +39,50 @@ export default function AuthLayout({
   }
 
   return (
-    <div className="">
-      <NavigationMenu className="w-full text-center">
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link href="/home" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Home
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/review" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Review Something
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/groups" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Groups
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+    <div>
+      <div className="w-full flex items-center justify-between px-8 py-4">
+        <NavigationMenu className="flex-1 flex justify-center">
+          <NavigationMenuList className="flex gap-6">
+            <NavigationMenuItem>
+              <Link href="/home" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Home
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/review" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Review Something
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/groups" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Groups
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/my-ratings" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  My Ratings
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
 
-          <NavigationMenuItem
-            className={navigationMenuTriggerStyle() + `float-right`}
-          >
-            Welcome {user.displayName}
-          </NavigationMenuItem>
-          <NavigationMenuItem className="">
-            <Button onClick={() => logout()} variant="destructive" size="sm">
-              Logout
-            </Button>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-medium">
+            Welcome, {user.displayName}
+          </span>
+          <Button onClick={() => logout()} variant="destructive" size="sm">
+            Logout
+          </Button>
+        </div>
+      </div>
       <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
     </div>
   );

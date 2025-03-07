@@ -1,7 +1,11 @@
 ﻿using FirebaseAdmin.Auth;
+using Microsoft.IdentityModel.Tokens;
 using rate_it_api.Core.DTOs;
 using rate_it_api.Core.Entities;
 using rate_it_api.Infra.Repositories;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace rate_it_api.Core.Services
 {
@@ -45,7 +49,23 @@ namespace rate_it_api.Core.Services
                 await _userRepository.CreateUserAsync(user);
 
             }
-            return user.Id;
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Name)
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["JWT:ValidIssuer"],
+                audience: _config["JWT:ValidAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+                );
+            return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
 

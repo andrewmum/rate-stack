@@ -46,7 +46,6 @@ interface AuthContextProviderProps {
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
       auth,
@@ -73,7 +72,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
-      await api.post("users/verify", { token });
+      const response = await api.post("users/verify", { token });
+      localStorage.setItem("apiToken", response.authToken);
       return result;
     } catch (error) {
       console.error("Error signing in with Google", error);

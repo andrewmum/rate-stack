@@ -1,4 +1,5 @@
-﻿using rate_it_api.Core.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using rate_it_api.Core.Entities;
 using rate_it_api.Infra.Repositories;
 
 namespace rate_it_api.Core.Services
@@ -21,10 +22,22 @@ namespace rate_it_api.Core.Services
             return await _itemRepository.SearchItemsAsync(searchString);
         }
 
+
+        public async Task<List<Item>> GetAllItemsAsync()
+        {
+            return await _itemRepository.GetAllItemsAsync();
+        }
+
+
         public async Task<Item> CreateItemAsync(string name, Category category = Category.Custom, string description = "")
         {
             var item = new Item { Name = name, Category = category, Description = description };
             return await _itemRepository.CreateItemAsync(item);
+        }
+
+       public async Task<Item> CreateExternalItemAsync(string externalId, Category category)
+        {
+            return await _itemRepository.CreateExternalItemAsync(externalId, category);
         }
     }
 }
